@@ -1,0 +1,241 @@
+Appium Introduction
+
+>>Operating System
+-Android
+-IOS
+-Blackberry
+-Windows
+
+>>Types of Mobile Apps
+-Mobile Web App
+The application launched with the mobile web browser
+
+-Native App
+Specifically for one platform we can install using Playstore(for Android)
+
+-Hybrid App
+They can be a mixture of WebApp and Native Apps
+
+>>Different Tools in the Market
+Appium, Selendroid etc
+
+>>Open Source Tool Requirments
+-The source code should not be impacted
+-Should be able to run in Simulators/Emulators
+-Larger Open source community for continous support
+
+>>Why Appium
+-Cross Platforms
+-Supports for built in apps
+-Supports webdriver compatible languages
+
+>>Limitation
+-Android version should be greater than 4.1(v 17)
+-No direct handling of toast message but we can handle this another way
+-No parallel execution but can be achived using saucelabs
+
+>>Appium 
+It is an Open Source Automation Tool which is used to automate android amd ios application
+
+>>Appium Server Architecture
+We have three levels
+IDE -----> Server -----> Emulator/Simlulator
+
+IDE: WE will write the code in the IDE
+Server:The IDE send a request to the Server and will create a session and the session will be sent to the IDE
+Now connection has been established between the Server and the IDE
+Now whatever the action will be written in the IDE will be Implemented in the Device
+In order to communicate with the Respective Devices
+We use UiAutomator2 to communicate with the Android Device 
+
+>>Prerequisites to Use Appium
+Install Java
+Eclipse
+Maven
+Selenium
+TestNG
+Android Studio
+Appium Sever
+Appium Inspector
+
+>>>Android Studio Installation
+-Select New Project >> Select No Activity Layout >> Click on Continue >> Search/Select SDK Manager >> Copy SDK Path >> Install Android Versions
+-Tools >> SDK manager >> copy android sdk path >> select Android 13-10
+-Tools >> SDK manager >> SDK tools >> select (android SDK build tools 34, android emulator, android SDK tools(obsolute),android em hypervisor, android sdk platform-tools Intel)  >> finish 
+-Paste the path in system environment variables  
+
+User variables
+ C:\Users\HI\AppData\Local\Android\Sdk
+
+System variables 
+C:\Users\HI\AppData\Local\Android\Sdk\platform-tools
+C:\Users\HI\AppData\Local\Android\Sdk\tools\bin
+C:\Users\HI\AppData\Local\Android\Sdk\tools
+
+-Check in CMD using “adb devices” command
+
+>>>>Creating a Vitual Devices
+-Launch the Android Studio
+-Click on Tools >> Device Manager
+-Click on Create a Device (It will be good if you will select a phone with PlayStore installed)
+-Click on "Next" >> Click on "Finish"
+
+>>>Appium server (installation)
+-Open CMD >> adb devices (to check if device is connected)
+-CMD >> npm install –g appium >> enter  (npm install –g appium@2.0.0-beta.66 for particular version) 
+-Where appium (to check path)
+-npm install(to download latest version)
+-npm uninstall(to uninstall)
+-appium (start the server)
+
+>>Appium inspector
+Download and install from https://github.com/appium/appium-inspector/releases
+
+>>Install UiAutomator2
+command : appium driver install uiautomator2
+
+>>To check the list of drivers installed 
+command : appium driver list
+
+>>How to configure mobile device
+Go to phone settings >> about phone >> software info >> build number(tap 5 times) >> back to settings >> developer options >> enable USB debugging
+
+>>Appium server port no: 4723
+
+>>APK : Application Package Manager
+
+>>Simulator : IOS Virtual Devices
+
+>>Emulator : Android Virtual Devices
+
+>>Installing App in the Virtual Device using Appium Inspector
+-Launch the Appium Inspector
+-Launch the Virtual Device
+-Start the Server
+-Add the Desired Capabilities (platformName,automationName,deviceName,udid and app (mention the path of the app))
+-Click on "Start Session"
+
+Note: It will launch the app automatically
+>>Installing App in the Virtual Device using Program
+package demo;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+
+public class InstallingTheApp {
+	static DesiredCapabilities dc;
+	static URL url;
+	static AndroidDriver driver;
+	public static void main(String[] args) throws MalformedURLException {
+		File f = new File("C:\\Users\\Sunil J\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js");
+		AppiumDriverLocalService service = new AppiumServiceBuilder().withAppiumJS(f).withIPAddress("127.0.0.1")
+				.usingPort(4723).withTimeout(Duration.ofSeconds(300)).build();
+		service.start();
+		dc = new DesiredCapabilities();
+		dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+		dc.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UiAutomator2");
+		dc.setCapability(MobileCapabilityType.DEVICE_NAME, "Lucifer_007");
+		dc.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+		
+		url = new URL("http://localhost:4723");
+		driver = new AndroidDriver(url, dc);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		driver.installApp("D:\\Demo_007\\Appium\\apps\\ApiDemos-debug.apk");
+	}
+}
+
+>>>Types of locators in appium
+•	accessibilityId
+•	id
+•	classname
+•	xpath
+•	UiAutomator(UiSelector)
+•	Image
+
+>>>How to unlock phone?
+	 dc.setCapability("unlockType","pin" );
+	 dc.setCapability("unlockKey", "1309");
+
+	 dc.setCapability("unlockType","pattern" );
+	 dc.setCapability("unlockKey", "12369");
+
+>>Command to get appPackage and appActivity
+Command_1: adb shell “dumpsys activity activities | grep mResumedActivity”
+Command_2: adb shell dumpsys window | find "mCurrentFocus"
+
+>>Driver methods
+•	driver.installApp(“path of .apk”);  to install appln 
+•	driver.isAppInstalled(“package name”);  to check if app is installed
+•	driver.removeApp(“package name”);  to un install app
+•	driver.activateApp("package name");  to open app running in background
+•	driver.runAppInBackground(Duration.ofSeconds(0));  to run app in background
+•	driver.queryAppState("package name");  to check the status of the appln (running in foreground and background)
+•	driver.isDeviceLocked();  to check if device is unlocked
+•	driver.openNotifications();  to open notification
+•	driver.hideKeyboard();  to hide the keyboard
+•	ScreenOrientation screen = driver.getOrientation();
+		driver.rotate(screen.LANDSCAPE);
+•	driver.context();  to switch to particular context 
+•	driver.getContextHandles();  to fetch the contexts of diff applns in mobile(native app, hybrid app) ( works like getWindowHandles)
+•	driver.get("url");  to pass the url
+
+>>Context Switch
+-Launch the Appium Inspector
+-Launch the Virtual Device
+-Start the Server
+-Add the Desired Capabilities (platformName,automationName,deviceName,udid and app (mention the path of the app))
+-Click on "Start Session"
+-Perform the action till the Context switch
+-Once the Context is switched
+-Click on "Web/Hybrid App Mode" (earth symbol)
+-We will get the Drop Down option with one of them starting with "WEBVIEW"
+-Launch the Chrome Browser 
+-Enter the url : chrome://inspect
+-If no device displayed click on "Open dedicated DevTools"
+-Below the device we have an "inspect" link click on it.
+
+>>Run the Script in Browser Stack
+Program_BrowserStack:
+
+public class BrowserStack {
+	public static final String username = "madhumithaj_g6scwX";
+	public static final String accesskey = "Ufa2ezSscp9SYBCGbVC5";
+	public static final String url = "https://" + username + ":" + accesskey + "@hub-cloud.browserstack.com/wd/hub";
+
+	@BeforeSuite
+	public void launch() throws IOException {
+		dc = new DesiredCapabilities();
+		dc.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Pixel 5");
+		dc.setCapability("os_version", "11.0");
+		dc.setCapability("Project", "BrowserStackTest");
+		dc.setCapability("build", "API_Demo_Testing 1.0");
+		dc.setCapability("name", "API_Demo_Testing");
+		dc.setCapability("app", "");
+
+		AndroidDriver driver = new AndroidDriver(new URL(url), dc);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+	}
+}
+
+Note: we have dc.setCapability("app", "");
+-Launch the BrowserStack url and Signin
+-Select the "APP" from the Left Navigation Menu
+-Click on "Upload App" and upload the app
+-Once uploaded successfully an url will be generated use that url for the app as
+               dc.setCapability("app", "bs://bbd5a8b66680f5bbd9554ed84ab1a1693a85c3ad");
+
+
+ 
