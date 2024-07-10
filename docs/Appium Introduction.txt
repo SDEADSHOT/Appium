@@ -238,4 +238,9 @@ Note: we have dc.setCapability("app", "");
                dc.setCapability("app", "bs://bbd5a8b66680f5bbd9554ed84ab1a1693a85c3ad");
 
 
+Note:The best stable version which will work is
+appium : 2.5.1
+uiautomtor2 : 3.6.1
+
+
  
